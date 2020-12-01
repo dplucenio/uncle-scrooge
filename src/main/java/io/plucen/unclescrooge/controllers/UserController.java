@@ -5,6 +5,7 @@ import io.plucen.unclescrooge.entities.User;
 import io.plucen.unclescrooge.services.UserService;
 import io.plucen.unclescrooge.utils.Pair;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,13 @@ public class UserController {
   @PostMapping("/users")
   public User createUser(@RequestBody UserCreationDto userCreationDTO) {
     return userService.create(userCreationDTO.getEmail());
+  }
+
+  @GetMapping("/users/{userId}")
+  public Optional<User> findById(@PathVariable UUID userId) {
+    final Optional<User> byId = userService.findById(userId);
+    if (byId.isPresent()) return byId;
+    else throw new RuntimeException("A");
   }
 
   @GetMapping("/users/{userId}/accounts")
