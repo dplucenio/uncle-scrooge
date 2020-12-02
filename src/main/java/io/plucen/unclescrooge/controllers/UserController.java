@@ -1,5 +1,8 @@
 package io.plucen.unclescrooge.controllers;
 
+import io.plucen.unclescrooge.UncleScroogeException;
+import io.plucen.unclescrooge.UncleScroogeException.IdNotUniqueException;
+import io.plucen.unclescrooge.UncleScroogeException.NonExistingEntityException;
 import io.plucen.unclescrooge.entities.Account;
 import io.plucen.unclescrooge.entities.User;
 import io.plucen.unclescrooge.services.UserService;
@@ -27,7 +30,8 @@ public class UserController {
   }
 
   @PostMapping("/users")
-  public User createUser(@RequestBody UserCreationDto userCreationDTO) {
+  public User createUser(@RequestBody UserCreationDto userCreationDTO)
+      throws UncleScroogeException {
     return userService.create(userCreationDTO.getEmail());
   }
 
@@ -39,14 +43,16 @@ public class UserController {
   }
 
   @GetMapping("/users/{userId}/accounts")
-  public List<Account> getConnectedAccounts(@PathVariable UUID userId) {
+  public List<Account> getConnectedAccounts(@PathVariable UUID userId)
+      throws NonExistingEntityException {
     return userService.getConnectedAccounts(userId);
   }
 
   @PostMapping("/users/{userId}/accounts")
   public Pair<UUID, UUID> connectUserToAccount(
       @PathVariable UUID userId,
-      @RequestBody UserAccountConnectionCreationDto connectionCreationDto) {
+      @RequestBody UserAccountConnectionCreationDto connectionCreationDto)
+      throws NonExistingEntityException, IdNotUniqueException {
     return userService.connectToAccount(userId, connectionCreationDto.getAccountId());
   }
 

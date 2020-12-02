@@ -1,7 +1,7 @@
 package io.plucen.unclescrooge.services;
 
 import io.plucen.unclescrooge.entities.Account;
-import io.plucen.unclescrooge.repositories.CrudRepository;
+import io.plucen.unclescrooge.repositories.AccountRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccountService {
 
-  private final CrudRepository<Account, UUID> accountRepository;
+  private final AccountRepository accountRepository;
 
   public List<Account> index() {
     return accountRepository.index();
