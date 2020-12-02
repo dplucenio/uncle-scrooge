@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import io.plucen.unclescrooge.entities.Account;
 import io.plucen.unclescrooge.entities.UserAccountConnection;
-import io.plucen.unclescrooge.repositories.CrudRepository;
+import io.plucen.unclescrooge.repositories.AccountRepository;
 import io.plucen.unclescrooge.repositories.UserAccountRepository;
 import io.plucen.unclescrooge.utils.Pair;
 import java.util.List;
@@ -18,7 +18,7 @@ public class FakeUserAccountRepository
     extends FakeCrudRepository<UserAccountConnection, Pair<UUID, UUID>>
     implements UserAccountRepository {
 
-  private final CrudRepository<Account, UUID> accountRepository;
+  private final AccountRepository accountRepository;
 
   @Override
   public List<Account> getUserConnectedAccounts(UUID userId) {
