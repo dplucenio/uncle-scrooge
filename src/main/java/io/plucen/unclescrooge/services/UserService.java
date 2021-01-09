@@ -1,11 +1,11 @@
 package io.plucen.unclescrooge.services;
 
-import io.plucen.unclescrooge.UncleScroogeException.EmailAlreadyUsedException;
-import io.plucen.unclescrooge.UncleScroogeException.IdNotUniqueException;
-import io.plucen.unclescrooge.UncleScroogeException.NonExistingEntityException;
 import io.plucen.unclescrooge.entities.Account;
 import io.plucen.unclescrooge.entities.User;
 import io.plucen.unclescrooge.entities.UserAccountConnection;
+import io.plucen.unclescrooge.exception.UncleScroogeException.EmailAlreadyUsedException;
+import io.plucen.unclescrooge.exception.UncleScroogeException.IdNotUniqueException;
+import io.plucen.unclescrooge.exception.UncleScroogeException.NonExistingEntityException;
 import io.plucen.unclescrooge.repositories.AccountRepository;
 import io.plucen.unclescrooge.repositories.UserAccountRepository;
 import io.plucen.unclescrooge.repositories.UserRepository;

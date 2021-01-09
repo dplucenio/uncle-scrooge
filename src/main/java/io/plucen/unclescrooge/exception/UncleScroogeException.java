@@ -1,4 +1,4 @@
-package io.plucen.unclescrooge;
+package io.plucen.unclescrooge.exception;
 
 import io.plucen.unclescrooge.entities.Identifiable;
 import java.util.UUID;

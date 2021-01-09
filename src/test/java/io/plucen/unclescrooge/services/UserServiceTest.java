@@ -3,13 +3,12 @@ package io.plucen.unclescrooge.services;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import io.plucen.unclescrooge.UncleScroogeApplication;
-import io.plucen.unclescrooge.UncleScroogeException;
-import io.plucen.unclescrooge.UncleScroogeException.EmailAlreadyUsedException;
-import io.plucen.unclescrooge.UncleScroogeException.IdNotUniqueException;
-import io.plucen.unclescrooge.UncleScroogeException.NonExistingEntityException;
 import io.plucen.unclescrooge.entities.Account;
 import io.plucen.unclescrooge.entities.User;
+import io.plucen.unclescrooge.exception.UncleScroogeException;
+import io.plucen.unclescrooge.exception.UncleScroogeException.EmailAlreadyUsedException;
+import io.plucen.unclescrooge.exception.UncleScroogeException.IdNotUniqueException;
+import io.plucen.unclescrooge.exception.UncleScroogeException.NonExistingEntityException;
 import io.plucen.unclescrooge.repositories.AccountRepository;
 import io.plucen.unclescrooge.repositories.UserAccountRepository;
 import io.plucen.unclescrooge.repositories.UserRepository;
@@ -21,14 +20,9 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {UncleScroogeApplication.class})
-@ActiveProfiles("test")
+@SpringBootTest
 class UserServiceTest {
   UserRepository userRepository;
   AccountRepository accountRepository;

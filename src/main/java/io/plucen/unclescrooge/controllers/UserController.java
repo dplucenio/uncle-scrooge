@@ -1,10 +1,10 @@
 package io.plucen.unclescrooge.controllers;
 
-import io.plucen.unclescrooge.UncleScroogeException;
-import io.plucen.unclescrooge.UncleScroogeException.IdNotUniqueException;
-import io.plucen.unclescrooge.UncleScroogeException.NonExistingEntityException;
 import io.plucen.unclescrooge.entities.Account;
 import io.plucen.unclescrooge.entities.User;
+import io.plucen.unclescrooge.exception.UncleScroogeException;
+import io.plucen.unclescrooge.exception.UncleScroogeException.IdNotUniqueException;
+import io.plucen.unclescrooge.exception.UncleScroogeException.NonExistingEntityException;
 import io.plucen.unclescrooge.services.UserService;
 import io.plucen.unclescrooge.utils.Pair;
 import java.util.List;
