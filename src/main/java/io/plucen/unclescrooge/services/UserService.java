@@ -8,7 +8,7 @@ import io.plucen.unclescrooge.exception.UncleScroogeException.IdNotUniqueExcepti
 import io.plucen.unclescrooge.exception.UncleScroogeException.NonExistingEntityException;
 import io.plucen.unclescrooge.repositories.AccountRepository;
 import io.plucen.unclescrooge.repositories.UserAccountRepository;
-import io.plucen.unclescrooge.repositories.UserRepository;
+import io.plucen.unclescrooge.repositories.newrepos.UserRepository;
 import io.plucen.unclescrooge.utils.Pair;
 import java.util.List;
 import java.util.Optional;
@@ -24,14 +24,14 @@ public class UserService {
   private final AccountRepository accountRepository;
   private final UserAccountRepository userAccountRepository;
 
-  public List<User> index() {
-    return userRepository.index();
+  public Iterable<User> index() {
+    return userRepository.findAll();
   }
 
   public User create(String email) throws EmailAlreadyUsedException {
     if (userRepository.findByEmail(email).isEmpty()) {
       User user = new User(UUID.randomUUID(), email);
-      userRepository.save(user);
+      userRepository.insert(user);
       return user;
     }
     throw new EmailAlreadyUsedException(email);

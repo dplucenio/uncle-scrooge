@@ -25,7 +25,7 @@ public class UserController {
   private final UserService userService;
 
   @GetMapping("/users")
-  public List<User> index() {
+  public Iterable<User> index() {
     return userService.index();
   }
 

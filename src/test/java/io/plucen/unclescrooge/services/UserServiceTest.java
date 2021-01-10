@@ -9,22 +9,26 @@ import io.plucen.unclescrooge.exception.UncleScroogeException;
 import io.plucen.unclescrooge.exception.UncleScroogeException.EmailAlreadyUsedException;
 import io.plucen.unclescrooge.exception.UncleScroogeException.IdNotUniqueException;
 import io.plucen.unclescrooge.exception.UncleScroogeException.NonExistingEntityException;
+import io.plucen.unclescrooge.migrations.Migrations;
 import io.plucen.unclescrooge.repositories.AccountRepository;
 import io.plucen.unclescrooge.repositories.UserAccountRepository;
-import io.plucen.unclescrooge.repositories.UserRepository;
 import io.plucen.unclescrooge.repositories.fakes.FakeAccountRepository;
 import io.plucen.unclescrooge.repositories.fakes.FakeUserAccountRepository;
-import io.plucen.unclescrooge.repositories.fakes.FakeUserRepository;
+import io.plucen.unclescrooge.repositories.newrepos.UserRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class UserServiceTest {
-  UserRepository userRepository;
+  @Autowired DataSource dataSource;
+  @Autowired UserRepository userRepository;
+
   AccountRepository accountRepository;
   UserAccountRepository userAccountRepository;
   UserService userService;
@@ -32,9 +36,11 @@ class UserServiceTest {
 
   @BeforeEach
   public void setup() {
+    Migrations.clean(dataSource);
+    Migrations.migrate(dataSource);
+
     accountRepository = new FakeAccountRepository();
     accountService = new AccountService(accountRepository);
-    userRepository = new FakeUserRepository();
     userAccountRepository = new FakeUserAccountRepository(accountRepository);
     userService = new UserService(userRepository, accountRepository, userAccountRepository);
   }

@@ -2,7 +2,7 @@ package io.plucen.unclescrooge;
 
 import io.plucen.unclescrooge.entities.User;
 import io.plucen.unclescrooge.migrations.Migrations;
-import io.plucen.unclescrooge.repositories.newrepos.NewUserRepository;
+import io.plucen.unclescrooge.repositories.newrepos.UserRepository;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -17,7 +17,7 @@ import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 class UncleScroogeApplicationTest {
 
   @Autowired DataSource dataSource;
-  @Autowired NewUserRepository newUserRepository;
+  @Autowired UserRepository userRepository;
   @Autowired JdbcAggregateTemplate jdbcAggregateTemplate;
 
   @Test
@@ -35,10 +35,10 @@ class UncleScroogeApplicationTest {
   public void aa() {
     Migrations.clean(dataSource);
     Migrations.migrate(dataSource);
-    newUserRepository.insert(new User(UUID.randomUUID(), "a"));
-    newUserRepository.insert(new User(UUID.randomUUID(), "dododo"));
-    final Optional<User> user = newUserRepository.findByEmail("dododo");
+    userRepository.insert(new User(UUID.randomUUID(), "a"));
+    userRepository.insert(new User(UUID.randomUUID(), "dododo"));
+    final Optional<User> user = userRepository.findByEmail("dododo");
     user.ifPresent(System.out::println);
-    System.out.println(newUserRepository.findAll());
+    System.out.println(userRepository.findAll());
   }
 }
