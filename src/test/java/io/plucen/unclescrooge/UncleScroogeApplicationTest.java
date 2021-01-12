@@ -1,11 +1,11 @@
 package io.plucen.unclescrooge;
 
-import io.plucen.unclescrooge.entities.User;
+import io.plucen.unclescrooge.entities.Account;
+import io.plucen.unclescrooge.entities.Person;
 import io.plucen.unclescrooge.migrations.Migrations;
-import io.plucen.unclescrooge.repositories.newrepos.UserRepository;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Optional;
+import io.plucen.unclescrooge.repositories.AccountRepository;
+import io.plucen.unclescrooge.repositories.PersonRepository;
+import java.math.BigDecimal;
 import java.util.UUID;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
@@ -17,28 +17,30 @@ import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 class UncleScroogeApplicationTest {
 
   @Autowired DataSource dataSource;
-  @Autowired UserRepository userRepository;
+  @Autowired PersonRepository personRepository;
+  @Autowired AccountRepository accountRepository;
   @Autowired JdbcAggregateTemplate jdbcAggregateTemplate;
 
   @Test
-  public void testPlaceHolder() {
-    try {
-      final Connection connection = dataSource.getConnection();
-      System.out.println("Connected");
-      System.out.println(connection.getMetaData().getURL());
-    } catch (SQLException exception) {
-      exception.printStackTrace();
-    }
+  public void bb() {
+    Migrations.clean(dataSource);
   }
 
   @Test
   public void aa() {
     Migrations.clean(dataSource);
     Migrations.migrate(dataSource);
-    userRepository.insert(new User(UUID.randomUUID(), "a"));
-    userRepository.insert(new User(UUID.randomUUID(), "dododo"));
-    final Optional<User> user = userRepository.findByEmail("dododo");
-    user.ifPresent(System.out::println);
-    System.out.println(userRepository.findAll());
+
+    final Account bank = new Account(UUID.randomUUID(), "Banco do Brasil", new BigDecimal(0.0));
+    accountRepository.insert(bank);
+
+    final Person dplucenio = new Person(UUID.randomUUID(), "dplucenio@gmail.com");
+    dplucenio.connectToAccount(bank);
+    personRepository.insert(dplucenio);
+    final Person clarice = new Person(UUID.randomUUID(), "cplucenio@gmail.com");
+    personRepository.insert(clarice);
+
+    System.out.println(personRepository.findByEmail("cplucenio@gmail.com"));
+    System.out.println(personRepository.findAll());
   }
 }

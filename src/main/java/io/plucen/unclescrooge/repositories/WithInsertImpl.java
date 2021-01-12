@@ -1,4 +1,4 @@
-package io.plucen.unclescrooge.repositories.newrepos;
+package io.plucen.unclescrooge.repositories;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
