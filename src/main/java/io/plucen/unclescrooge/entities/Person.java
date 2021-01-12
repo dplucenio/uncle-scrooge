@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @Table("person")
-public class Person implements Identifiable<UUID> {
+public class Person {
   @Id private final UUID id;
   private final String email;
   private Set<AccountRef> accountRefs = new HashSet<>();

@@ -1,6 +1,7 @@
 package io.plucen.unclescrooge.repositories;
 
 import io.plucen.unclescrooge.entities.Person;
+import io.plucen.unclescrooge.repositories.withinsert.WithInsert;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jdbc.repository.query.Query;

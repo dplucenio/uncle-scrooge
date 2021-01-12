@@ -5,7 +5,7 @@ import java.util.UUID;
 import lombok.Data;
 
 @Data
-public class Transaction implements Identifiable<UUID> {
+public class Transaction {
   private final UUID id;
   private final UUID accountId;
   private final BigDecimal amount; // TODO: review this type

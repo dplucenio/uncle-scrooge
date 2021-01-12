@@ -9,7 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @Table("account")
-public class Account implements Identifiable<UUID> {
+public class Account {
   @Id private final UUID id;
   private final String name;
 
