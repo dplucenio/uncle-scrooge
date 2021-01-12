@@ -1,7 +1,5 @@
-package io.plucen.unclescrooge;
+package io.plucen.unclescrooge.exception;
 
-import io.plucen.unclescrooge.entities.Identifiable;
-import java.util.UUID;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -27,7 +25,7 @@ public class UncleScroogeException extends Exception {
   }
 
   public static class NonExistingEntityException extends UncleScroogeException {
-    public NonExistingEntityException(Class<? extends Identifiable<?>> type, UUID id) {
+    public NonExistingEntityException(Class<?> type, Object id) {
       super(
           "There is no " + type.getSimpleName() + " stored with id " + id.toString(),
           HttpStatus.BAD_REQUEST);

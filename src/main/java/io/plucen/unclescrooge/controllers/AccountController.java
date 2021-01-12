@@ -3,7 +3,6 @@ package io.plucen.unclescrooge.controllers;
 import io.plucen.unclescrooge.entities.Account;
 import io.plucen.unclescrooge.services.AccountService;
 import java.math.BigDecimal;
-import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,7 @@ public class AccountController {
   private final AccountService accountService;
 
   @GetMapping("/accounts")
-  public List<Account> index() {
+  public Iterable<Account> index() {
     return accountService.index();
   }
 
