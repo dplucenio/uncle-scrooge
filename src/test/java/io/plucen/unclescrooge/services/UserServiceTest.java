@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.plucen.unclescrooge.entities.Account;
-import io.plucen.unclescrooge.entities.Person;
+import io.plucen.unclescrooge.entities.User;
 import io.plucen.unclescrooge.exception.UncleScroogeException;
 import io.plucen.unclescrooge.exception.UncleScroogeException.EmailAlreadyUsedException;
 import io.plucen.unclescrooge.exception.UncleScroogeException.IdNotUniqueException;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PersonServiceTest {
+class UserServiceTest {
   @Autowired DataSource dataSource;
 
   @Autowired UserService userService;
@@ -34,8 +34,8 @@ class PersonServiceTest {
 
   @Test
   public void testUserCreation() throws UncleScroogeException {
-    final Person person = userService.create("jlennon@mail.com");
-    assertThat(person.getEmail()).isEqualTo("jlennon@mail.com");
+    final User user = userService.create("jlennon@mail.com");
+    assertThat(user.getEmail()).isEqualTo("jlennon@mail.com");
   }
 
   @Test
@@ -52,21 +52,26 @@ class PersonServiceTest {
             NonExistingEntityException.class,
             () -> assertThat(userService.connectToAccount(userId, UUID.randomUUID())));
     assertThat(nonExistingUser.getMessage())
-        .isEqualToIgnoringCase("There is no Person stored with id " + userId.toString());
+        .isEqualToIgnoringCase(
+            "There is no " + User.class.getSimpleName() + " stored with id " + userId.toString());
   }
 
   @Test
   public void testCantConnectToNonExistingAccount() throws UncleScroogeException {
-    final Person person = userService.create("jlennon@mail.com");
+    final User user = userService.create("jlennon@mail.com");
     final UUID accountId = UUID.randomUUID();
     final NonExistingEntityException nonExistingUser =
         assertThrows(
             NonExistingEntityException.class,
             () -> {
-              assertThat(userService.connectToAccount(person.getId(), accountId));
+              assertThat(userService.connectToAccount(user.getId(), accountId));
             });
     assertThat(nonExistingUser.getMessage())
-        .isEqualToIgnoringCase("There is no Account stored with id " + accountId.toString());
+        .isEqualToIgnoringCase(
+            "There is no "
+                + Account.class.getSimpleName()
+                + " stored with id "
+                + accountId.toString());
   }
 
   @Test
@@ -77,29 +82,54 @@ class PersonServiceTest {
 
   @Test
   public void testUserAccountConnectionsShouldBeUnique() throws UncleScroogeException {
-    final Person person = userService.create("jlennon@mail.com");
+    final User user = userService.create("jlennon@mail.com");
     final Account account = accountService.createAccount("bank 1", new BigDecimal("0.0"));
-    userService.connectToAccount(person.getId(), account.getId());
+    userService.connectToAccount(user.getId(), account.getId());
     assertThrows(
         IdNotUniqueException.class,
-        () -> userService.connectToAccount(person.getId(), account.getId()));
+        () -> userService.connectToAccount(user.getId(), account.getId()));
   }
 
   @Test
   public void testAccountConnection() throws UncleScroogeException {
-    final Person person = userService.create("jlennon@mail.com");
+    final User user = userService.create("jlennon@mail.com");
     final Account firstAccount =
         accountService.createAccount("firstAccount", new BigDecimal("0.0"));
     final Account secondAccount =
         accountService.createAccount("secondAccount", new BigDecimal("0.0"));
 
-    assertThat(userService.getConnectedAccounts(person.getId())).isEmpty();
+    assertThat(userService.getConnectedAccounts(user.getId())).isEmpty();
 
-    userService.connectToAccount(person.getId(), firstAccount.getId());
-    userService.connectToAccount(person.getId(), secondAccount.getId());
-    final Iterable<Account> connectedAccounts = userService.getConnectedAccounts(person.getId());
+    userService.connectToAccount(user.getId(), firstAccount.getId());
+    userService.connectToAccount(user.getId(), secondAccount.getId());
+    final Iterable<Account> connectedAccounts = userService.getConnectedAccounts(user.getId());
     assertThat(connectedAccounts).isNotEmpty();
     assertThat(StreamSupport.stream(connectedAccounts.spliterator(), false).map(Account::getName))
         .contains("firstAccount", "secondAccount");
+  }
+
+  @Test
+  public void testFindUssersByAccount()
+      throws EmailAlreadyUsedException, NonExistingEntityException, IdNotUniqueException {
+    final User john = userService.create("jLennon@gmail.com");
+    final User paul = userService.create("pmccartney@gmail.com");
+    final Account firstAccount =
+        accountService.createAccount("firstAccount", new BigDecimal("0.0"));
+    final Account secondsAccount =
+        accountService.createAccount("secondAccount", new BigDecimal("0.0"));
+    userService.connectToAccount(john.getId(), firstAccount.getId());
+    userService.connectToAccount(john.getId(), secondsAccount.getId());
+    userService.connectToAccount(paul.getId(), secondsAccount.getId());
+
+    assertThat(
+            StreamSupport.stream(
+                    userService.findAllByAccountId(firstAccount.getId()).spliterator(), false)
+                .map(User::getEmail))
+        .containsExactlyInAnyOrder("jLennon@gmail.com");
+    assertThat(
+            StreamSupport.stream(
+                    userService.findAllByAccountId(secondsAccount.getId()).spliterator(), false)
+                .map(User::getEmail))
+        .containsExactly("jLennon@gmail.com", "pmccartney@gmail.com");
   }
 }

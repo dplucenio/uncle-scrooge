@@ -1,10 +1,14 @@
 package io.plucen.unclescrooge;
 
 import io.plucen.unclescrooge.entities.Account;
-import io.plucen.unclescrooge.entities.Person;
+import io.plucen.unclescrooge.entities.Category;
+import io.plucen.unclescrooge.entities.MoneyTransaction;
+import io.plucen.unclescrooge.entities.User;
 import io.plucen.unclescrooge.migrations.Migrations;
 import io.plucen.unclescrooge.repositories.AccountRepository;
-import io.plucen.unclescrooge.repositories.PersonRepository;
+import io.plucen.unclescrooge.repositories.CategoryRepository;
+import io.plucen.unclescrooge.repositories.MoneyTransactionRepository;
+import io.plucen.unclescrooge.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.util.UUID;
 import javax.sql.DataSource;
@@ -17,8 +21,10 @@ import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 class UncleScroogeApplicationTest {
 
   @Autowired DataSource dataSource;
-  @Autowired PersonRepository personRepository;
+  @Autowired UserRepository userRepository;
   @Autowired AccountRepository accountRepository;
+  @Autowired CategoryRepository categoryRepository;
+  @Autowired MoneyTransactionRepository moneyTransactionRepository;
   @Autowired JdbcAggregateTemplate jdbcAggregateTemplate;
 
   @Test
@@ -31,16 +37,29 @@ class UncleScroogeApplicationTest {
     Migrations.clean(dataSource);
     Migrations.migrate(dataSource);
 
-    final Account bank = new Account(UUID.randomUUID(), "Banco do Brasil", new BigDecimal(0.0));
-    accountRepository.insert(bank);
+    final User john = User.create("jLennon@gmail.com");
+    final Account strawbeeryFieldsBank =
+        Account.create("Strawberry Fields Bank", new BigDecimal("21.0"));
+    john.connectToAccount(strawbeeryFieldsBank);
+    accountRepository.insert(strawbeeryFieldsBank);
+    userRepository.insert(john);
+    final User paul = new User(UUID.randomUUID(), "pMccartney@gmail.com");
+    System.out.println("---------------------------------------");
+    userRepository.insert(paul);
+    paul.connectToAccount(strawbeeryFieldsBank);
+    userRepository.save(paul);
 
-    final Person dplucenio = new Person(UUID.randomUUID(), "dplucenio@gmail.com");
-    dplucenio.connectToAccount(bank);
-    personRepository.insert(dplucenio);
-    final Person clarice = new Person(UUID.randomUUID(), "cplucenio@gmail.com");
-    personRepository.insert(clarice);
+    final Category food = Category.create("food");
+    categoryRepository.insert(food);
 
-    System.out.println(personRepository.findByEmail("cplucenio@gmail.com"));
-    System.out.println(personRepository.findAll());
+    final MoneyTransaction transaction =
+        MoneyTransaction.create(
+            new BigDecimal("9.99"), "balinha", john, strawbeeryFieldsBank, food);
+    moneyTransactionRepository.insert(transaction);
+
+    System.out.println(userRepository.findByEmail("cplucenio@gmail.com"));
+    System.out.println(userRepository.findAll());
+    System.out.println(userRepository.findAllByAccountId(strawbeeryFieldsBank.getId()));
+    System.out.println(moneyTransactionRepository.findAll());
   }
 }

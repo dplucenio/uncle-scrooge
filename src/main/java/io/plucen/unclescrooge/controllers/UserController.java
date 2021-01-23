@@ -1,7 +1,7 @@
 package io.plucen.unclescrooge.controllers;
 
 import io.plucen.unclescrooge.entities.Account;
-import io.plucen.unclescrooge.entities.Person;
+import io.plucen.unclescrooge.entities.User;
 import io.plucen.unclescrooge.exception.UncleScroogeException;
 import io.plucen.unclescrooge.exception.UncleScroogeException.IdNotUniqueException;
 import io.plucen.unclescrooge.exception.UncleScroogeException.NonExistingEntityException;
@@ -24,19 +24,19 @@ public class UserController {
   private final UserService userService;
 
   @GetMapping("/users")
-  public Iterable<Person> index() {
+  public Iterable<User> index() {
     return userService.index();
   }
 
   @PostMapping("/users")
-  public Person createUser(@RequestBody UserCreationDto userCreationDTO)
+  public User createUser(@RequestBody UserCreationDto userCreationDTO)
       throws UncleScroogeException {
     return userService.create(userCreationDTO.getEmail());
   }
 
   @GetMapping("/users/{userId}")
-  public Optional<Person> findById(@PathVariable UUID userId) {
-    final Optional<Person> byId = userService.findById(userId);
+  public Optional<User> findById(@PathVariable UUID userId) {
+    final Optional<User> byId = userService.findById(userId);
     if (byId.isPresent()) return byId;
     else throw new RuntimeException("A");
   }

@@ -1,19 +1,17 @@
 package io.plucen.unclescrooge.entities;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@Table("account")
-public class Account {
+@Table("category")
+public class Category {
   @Id private final UUID id;
   private final String name;
-  private final BigDecimal initialAmount;
 
-  public static Account create(String name, BigDecimal initialAmount) {
-    return new Account(UUID.randomUUID(), name, initialAmount);
+  public static Category create(String name) {
+    return new Category(UUID.randomUUID(), name);
   }
 }
