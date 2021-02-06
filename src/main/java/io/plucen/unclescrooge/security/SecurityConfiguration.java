@@ -36,9 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .addFilter(new JwtAuthenticationFilter())
         .authorizeRequests()
         .anyRequest()
-        .authenticated()
-        .and()
-        .httpBasic();
+        .authenticated();
   }
 
   @Bean
