@@ -1,5 +1,6 @@
 package io.plucen.unclescrooge.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @Table("money_transaction")
+@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 public class MoneyTransaction {
   @Id private final UUID id;
   private final BigDecimal amount; // TODO: review this type
