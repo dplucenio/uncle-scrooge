@@ -12,6 +12,7 @@ import io.plucen.unclescrooge.utils.Pair;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,14 +21,15 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final AccountRepository accountRepository;
+  private final PasswordEncoder passwordEncoder;
 
   public Iterable<User> index() {
     return userRepository.findAll();
   }
 
-  public User create(String email) throws EmailAlreadyUsedException {
+  public User create(String email, String password) throws EmailAlreadyUsedException {
     if (userRepository.findByEmail(email).isEmpty()) {
-      User user = new User(UUID.randomUUID(), email);
+      User user = User.create(email, passwordEncoder.encode(password));
       userRepository.insert(user);
       return user;
     }

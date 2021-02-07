@@ -34,14 +34,15 @@ class UserServiceTest {
 
   @Test
   public void testUserCreation() throws UncleScroogeException {
-    final User user = userService.create("jlennon@mail.com");
+    final User user = userService.create("jlennon@mail.com", "a"); // TODO: verify password
     assertThat(user.getEmail()).isEqualTo("jlennon@mail.com");
   }
 
   @Test
   public void testThatCreatedUsersHaveUniqueEmails() throws UncleScroogeException {
-    userService.create("jlennon@mail.com");
-    assertThrows(EmailAlreadyUsedException.class, () -> userService.create("jlennon@mail.com"));
+    userService.create("jlennon@mail.com", "a");
+    assertThrows(
+        EmailAlreadyUsedException.class, () -> userService.create("jlennon@mail.com", "b"));
   }
 
   @Test
@@ -58,7 +59,7 @@ class UserServiceTest {
 
   @Test
   public void testCantConnectToNonExistingAccount() throws UncleScroogeException {
-    final User user = userService.create("jlennon@mail.com");
+    final User user = userService.create("jlennon@mail.com", "a");
     final UUID accountId = UUID.randomUUID();
     final NonExistingEntityException nonExistingUser =
         assertThrows(
@@ -82,7 +83,7 @@ class UserServiceTest {
 
   @Test
   public void testUserAccountConnectionsShouldBeUnique() throws UncleScroogeException {
-    final User user = userService.create("jlennon@mail.com");
+    final User user = userService.create("jlennon@mail.com", "a");
     final Account account = accountService.createAccount("bank 1", new BigDecimal("0.0"));
     userService.connectToAccount(user.getId(), account.getId());
     assertThrows(
@@ -92,7 +93,7 @@ class UserServiceTest {
 
   @Test
   public void testAccountConnection() throws UncleScroogeException {
-    final User user = userService.create("jlennon@mail.com");
+    final User user = userService.create("jlennon@mail.com", "a");
     final Account firstAccount =
         accountService.createAccount("firstAccount", new BigDecimal("0.0"));
     final Account secondAccount =
@@ -111,8 +112,8 @@ class UserServiceTest {
   @Test
   public void testFindUssersByAccount()
       throws EmailAlreadyUsedException, NonExistingEntityException, IdNotUniqueException {
-    final User john = userService.create("jLennon@gmail.com");
-    final User paul = userService.create("pmccartney@gmail.com");
+    final User john = userService.create("jLennon@gmail.com", "a");
+    final User paul = userService.create("pmccartney@gmail.com", "b");
     final Account firstAccount =
         accountService.createAccount("firstAccount", new BigDecimal("0.0"));
     final Account secondsAccount =

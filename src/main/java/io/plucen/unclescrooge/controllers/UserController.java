@@ -31,7 +31,7 @@ public class UserController {
   @PostMapping("/users")
   public User createUser(@RequestBody UserCreationDto userCreationDTO)
       throws UncleScroogeException {
-    return userService.create(userCreationDTO.getEmail());
+    return userService.create(userCreationDTO.getEmail(), userCreationDTO.getPassword());
   }
 
   @GetMapping("/users/{userId}")
@@ -58,6 +58,7 @@ public class UserController {
   @Data
   private static class UserCreationDto {
     private String email;
+    private String password;
   }
 
   @Data

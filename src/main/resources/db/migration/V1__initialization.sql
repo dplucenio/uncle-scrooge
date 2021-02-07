@@ -1,4 +1,4 @@
-CREATE TABLE application_user (id uuid PRIMARY KEY, email varchar);
+CREATE TABLE application_user (id uuid PRIMARY KEY, email varchar, password VARCHAR);
 
 CREATE TABLE account (id uuid PRIMARY KEY, name varchar, initial_amount decimal);
 
