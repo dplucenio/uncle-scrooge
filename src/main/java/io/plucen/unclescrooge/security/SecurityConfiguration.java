@@ -1,6 +1,7 @@
 package io.plucen.unclescrooge.security;
 
 import io.plucen.unclescrooge.security.jwt.JwtAuthenticationFilter;
+import io.plucen.unclescrooge.security.jwt.JwtVerificationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,12 +34,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .addFilter(new JwtAuthenticationFilter())
+        .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+        .addFilterAfter(new JwtVerificationFilter(), JwtAuthenticationFilter.class)
         .authorizeRequests()
         .anyRequest()
-        .authenticated()
-        .and()
-        .httpBasic();
+        .authenticated();
   }
 
   @Bean

@@ -15,13 +15,15 @@ import org.springframework.data.relational.core.mapping.Table;
 public class User {
   @Id private final UUID id;
   private final String email;
+  private final String password;
+
   // @Column here is used to set custom column name on conjunction table (default would be "user")
   // to change the other field ("account"), use same annotation on AccountRef class
   @Column(value = "application_user")
   private Set<AccountRef> accountRefs = new HashSet<>();
 
-  public static User create(String email) {
-    return new User(UUID.randomUUID(), email);
+  public static User create(String email, String password) {
+    return new User(UUID.randomUUID(), email, password);
   }
 
   public void connectToAccount(final Account account) {

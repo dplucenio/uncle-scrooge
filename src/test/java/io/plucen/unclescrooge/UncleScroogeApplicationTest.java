@@ -10,7 +10,6 @@ import io.plucen.unclescrooge.repositories.CategoryRepository;
 import io.plucen.unclescrooge.repositories.MoneyTransactionRepository;
 import io.plucen.unclescrooge.repositories.UserRepository;
 import java.math.BigDecimal;
-import java.util.UUID;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +36,13 @@ class UncleScroogeApplicationTest {
     Migrations.clean(dataSource);
     Migrations.migrate(dataSource);
 
-    final User john = User.create("jLennon@gmail.com");
+    final User john = User.create("jLennon@gmail.com", "1LoveY0ko");
     final Account strawbeeryFieldsBank =
         Account.create("Strawberry Fields Bank", new BigDecimal("21.0"));
     john.connectToAccount(strawbeeryFieldsBank);
     accountRepository.insert(strawbeeryFieldsBank);
     userRepository.insert(john);
-    final User paul = new User(UUID.randomUUID(), "pMccartney@gmail.com");
+    final User paul = User.create("pMccartney@gmail.com", "y0k0Destroy3dTheBe4tles");
     System.out.println("---------------------------------------");
     userRepository.insert(paul);
     paul.connectToAccount(strawbeeryFieldsBank);
